@@ -3,49 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Grades and Statistics</title>
+    <title>CGPA Calculator</title>
     <style>
+        /* Body and Background Customization */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff7f50, #ff1493); /* Custom gradient background */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
         }
+
+        h1 {
+            color: #fff;
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
         label {
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #fff;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #ff1493; /* Focus border color */
+        }
+
+        button {
+            background-color: #ff1493; /* Pink button */
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff7f50; /* Light pink on hover */
+        }
+
+        .statistics {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .statistics p {
+            font-size: 18px;
             margin: 10px 0;
         }
+
+        .error {
+            color: #ff4500;
+            font-size: 18px;
+            margin: 10px 0;
+            display: none;
+        }
+
         .course-entry {
             margin-bottom: 20px;
         }
-        .statistics {
-            margin-top: 30px;
-        }
-        .error {
-            color: red;
+
+        .course-entry input {
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Course Grades and Statistics</h1>
+    <div class="container">
+        <h1>CGPA Calculator</h1>
 
-    <div>
-        <label for="numCourses">Enter the number of courses: </label>
-        <input type="number" id="numCourses" min="1">
-        <button onclick="generateCourseInputs()">Submit</button>
+        <div>
+            <label for="numCourses">Enter the number of courses:</label>
+            <input type="number" id="numCourses" min="1">
+            <button onclick="generateCourseInputs()">Submit</button>
+        </div>
+
+        <div id="courseInputs"></div>
+
+        <button id="calculateBtn" style="display: none;" onclick="calculateStatistics()">Calculate Statistics</button>
+
+        <div id="error" class="error"></div>
+
+        <div id="results" class="statistics">
+            <h2>Statistics</h2>
+            <p id="average"></p>
+            <p id="maxGrade"></p>
+            <p id="minGrade"></p>
+            <p id="stdDev"></p>
+        </div>
     </div>
-
-    <div id="courseInputs"></div>
-
-    <button id="calculateBtn" style="display: none;" onclick="calculateStatistics()">Calculate Statistics</button>
-
-    <div id="results" class="statistics" style="display: none;">
-        <h2>Statistics</h2>
-        <p id="average"></p>
-        <p id="maxGrade"></p>
-        <p id="minGrade"></p>
-        <p id="stdDev"></p>
-    </div>
-
-    <div id="error" class="error" style="display: none;"></div>
 
     <script>
         // Function to validate grades
