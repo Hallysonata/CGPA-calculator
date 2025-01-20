@@ -5,220 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CGPA Calculator</title>
     <style>
-        /* Body and Background Customization */
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff7f50, #ff1493); /* Custom gradient background */
-            color: #fff;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
+            padding: 20px;
         }
-
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
         h1 {
-            color: #fff;
-            font-size: 36px;
-            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
             font-weight: bold;
         }
-
-        .container {
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-            padding: 40px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        label {
-            font-size: 18px;
-            color: #fff;
-            display: block;
-            margin: 10px 0 5px;
-        }
-
         input[type="number"], input[type="text"] {
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            background-color: transparent;
-            color: #fff;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        input[type="number"]:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #ff1493; /* Focus border color */
-        }
-
-        button {
-            background-color: #ff1493; /* Pink button */
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #ff7f50; /* Light pink on hover */
-        }
-
-        .statistics {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .statistics p {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-
-        .error {
-            color: #ff4500;
-            font-size: 18px;
-            margin: 10px 0;
-            display: none;
-        }
-
-        .course-entry {
-            margin-bottom: 20px;
-        }
-
-        .course-entry input {
+            padding: 8px;
             margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .add-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .add-button:hover {
+            background-color: #218838;
+        }
+        .calculate-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .calculate-button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .error {
+            color: red;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>CGPA Calculator</h1>
-
-        <div>
-            <label for="numCourses">Enter the number of courses:</label>
-            <input type="number" id="numCourses" min="1">
-            <button onclick="generateCourseInputs()">Submit</button>
-        </div>
-
-        <div id="courseInputs"></div>
-
-        <button id="calculateBtn" style="display: none;" onclick="calculateStatistics()">Calculate Statistics</button>
-
-        <div id="error" class="error"></div>
-
-        <div id="results" class="statistics">
-            <h2>Statistics</h2>
-            <p id="average"></p>
-            <p id="maxGrade"></p>
-            <p id="minGrade"></p>
-            <p id="stdDev"></p>
-        </div>
+<div class="container">
+    <h1>CGPA Calculator</h1>
+    <div id="subjects-list">
+        <!-- Dynamic input fields will be added here -->
     </div>
+    <button class="add-button" onclick="addSubject()">Add Subject</button>
+    <br><br>
+    <button class="calculate-button" onclick="calculateCGPA()">Calculate CGPA</button>
 
-    <script>
-        // Function to validate grades
-        function validateMarks(grade) {
-            return grade >= 0 && grade <= 100;
-        }
+    <div class="result" id="result"></div>
+    <div class="error" id="error-message"></div>
+</div>
 
-        // Function to generate course input fields based on the number of courses
-        function generateCourseInputs() {
-            const numCourses = document.getElementById('numCourses').value;
-            const courseInputsDiv = document.getElementById('courseInputs');
-            const errorDiv = document.getElementById('error');
-            const calculateBtn = document.getElementById('calculateBtn');
-            courseInputsDiv.innerHTML = ''; // Clear previous inputs
+<script>
+    let subjectCount = 0;
 
-            // Check if numCourses is valid
-            if (numCourses <= 0 || isNaN(numCourses)) {
-                errorDiv.style.display = 'block';
-                errorDiv.textContent = 'Please enter a valid number of courses.';
-                calculateBtn.style.display = 'none';
-                return;
+    function addSubject() {
+        subjectCount++;
+        const subjectList = document.getElementById("subjects-list");
+        const subjectDiv = document.createElement("div");
+        subjectDiv.classList.add("form-group");
+        subjectDiv.id = "subject-" + subjectCount;
+
+        const subjectLabel = document.createElement("label");
+        subjectLabel.innerText = "Subject " + subjectCount;
+
+        const gradeInput = document.createElement("input");
+        gradeInput.type = "text";
+        gradeInput.id = "grade-" + subjectCount;
+        gradeInput.placeholder = "Enter Grade (e.g. A, B+, C, etc.)";
+
+        const creditInput = document.createElement("input");
+        creditInput.type = "number";
+        creditInput.id = "credit-" + subjectCount;
+        creditInput.placeholder = "Enter Credit Hours";
+
+        subjectDiv.appendChild(subjectLabel);
+        subjectDiv.appendChild(gradeInput);
+        subjectDiv.appendChild(creditInput);
+        subjectList.appendChild(subjectDiv);
+    }
+
+    function calculateCGPA() {
+        let totalCredits = 0;
+        let weightedGradePoints = 0;
+        let errorMessage = "";
+
+        for (let i = 1; i <= subjectCount; i++) {
+            const grade = document.getElementById("grade-" + i).value.trim().toUpperCase();
+            const credits = parseFloat(document.getElementById("credit-" + i).value.trim());
+
+            if (!grade || isNaN(credits) || credits <= 0) {
+                errorMessage = "Please enter valid inputs for all subjects.";
+                break;
             }
 
-            errorDiv.style.display = 'none';
-
-            // Create input fields for course names and grades
-            for (let i = 0; i < numCourses; i++) {
-                const courseEntryDiv = document.createElement('div');
-                courseEntryDiv.classList.add('course-entry');
-                courseEntryDiv.innerHTML = `
-                    <label for="courseName${i}">Course ${i + 1} Name:</label>
-                    <input type="text" id="courseName${i}" required>
-                    <br>
-                    <label for="grade${i}">Grade for ${i + 1} (0-100):</label>
-                    <input type="number" id="grade${i}" min="0" max="100" required>
-                `;
-                courseInputsDiv.appendChild(courseEntryDiv);
+            const gradePoint = getGradePoint(grade);
+            if (gradePoint === -1) {
+                errorMessage = `Invalid grade for Subject ${i}. Please enter a valid grade.`;
+                break;
             }
 
-            calculateBtn.style.display = 'inline-block';
+            totalCredits += credits;
+            weightedGradePoints += gradePoint * credits;
         }
 
-        // Function to calculate statistics
-        function calculateStatistics() {
-            const numCourses = document.getElementById('numCourses').value;
-            let grades = [];
-            let courseNames = [];
-            let errorDiv = document.getElementById('error');
-            errorDiv.style.display = 'none';
-
-            // Collect course names and grades
-            for (let i = 0; i < numCourses; i++) {
-                const courseName = document.getElementById(`courseName${i}`).value;
-                const grade = parseFloat(document.getElementById(`grade${i}`).value);
-
-                if (!courseName || !validateMarks(grade)) {
-                    errorDiv.style.display = 'block';
-                    errorDiv.textContent = 'Please enter valid course names and grades between 0 and 100.';
-                    return;
-                }
-
-                courseNames.push(courseName);
-                grades.push(grade);
-            }
-
-            // Calculate statistics
-            const average = calculateAverage(grades);
-            const maxGrade = Math.max(...grades);
-            const minGrade = Math.min(...grades);
-            const stdDev = calculateStandardDeviation(grades, average);
-
-            // Display results
-            document.getElementById('average').textContent = `Average Grade: ${average.toFixed(2)}`;
-            document.getElementById('maxGrade').textContent = `Highest Grade: ${maxGrade.toFixed(2)}`;
-            document.getElementById('minGrade').textContent = `Lowest Grade: ${minGrade.toFixed(2)}`;
-            document.getElementById('stdDev').textContent = `Standard Deviation: ${stdDev.toFixed(2)}`;
-
-            document.getElementById('results').style.display = 'block';
+        if (errorMessage) {
+            document.getElementById("error-message").innerText = errorMessage;
+            document.getElementById("result").innerText = "";
+        } else {
+            const cgpa = weightedGradePoints / totalCredits;
+            document.getElementById("error-message").innerText = "";
+            document.getElementById("result").innerText = "Your CGPA is: " + cgpa.toFixed(2);
         }
+    }
 
-        // Helper function to calculate average
-        function calculateAverage(grades) {
-            const sum = grades.reduce((acc, grade) => acc + grade, 0);
-            return sum / grades.length;
-        }
-
-        // Helper function to calculate standard deviation
-        function calculateStandardDeviation(grades, average) {
-            const variance = grades.reduce((acc, grade) => acc + Math.pow(grade - average, 2), 0) / grades.length;
-            return Math.sqrt(variance);
-        }
-    </script>
+    function getGradePoint(grade) {
+        const gradePoints = {
+            "A+": 4.0,
+            "A": 4.0,
+            "B+": 3.5,
+            "B": 3.0,
+            "C+": 2.5,
+            "C": 2.0,
+            "D+": 1.5,
+            "D": 1.0,
+            "F": 0.0
+        };
+        return gradePoints[grade] || -1;
+    }
+</script>
 
 </body>
 </html>
+
