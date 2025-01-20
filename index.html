@@ -5,85 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CGPA Calculator</title>
     <style>
+        /* General styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
             margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+        
         .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-        }
-        input[type="number"], input[type="text"] {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            max-width: 600px;
         }
-        .add-button {
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border: 1px solid #007bff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .add-button, .calculate-button {
             background-color: #28a745;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
-        .add-button:hover {
+
+        .add-button:hover, .calculate-button:hover {
             background-color: #218838;
         }
+
         .calculate-button {
             background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
         }
+
         .calculate-button:hover {
             background-color: #0056b3;
         }
+
         .result {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
             text-align: center;
+            color: #333;
         }
+
         .error {
             color: red;
             text-align: center;
         }
+
+        .subject-list {
+            margin-bottom: 20px;
+        }
+
+        .subject-item {
+            margin-bottom: 15px;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>CGPA Calculator</h1>
-    <div id="subjects-list">
+    <div id="subjects-list" class="subject-list">
         <!-- Dynamic input fields will be added here -->
     </div>
-    <button class="add-button" onclick="addSubject()">Add Subject</button>
-    <br><br>
-    <button class="calculate-button" onclick="calculateCGPA()">Calculate CGPA</button>
-
+    <div class="button-container">
+        <button class="add-button" onclick="addSubject()">Add Subject</button>
+        <button class="calculate-button" onclick="calculateCGPA()">Calculate CGPA</button>
+    </div>
+    
     <div class="result" id="result"></div>
     <div class="error" id="error-message"></div>
 </div>
@@ -95,7 +132,7 @@
         subjectCount++;
         const subjectList = document.getElementById("subjects-list");
         const subjectDiv = document.createElement("div");
-        subjectDiv.classList.add("form-group");
+        subjectDiv.classList.add("subject-item");
         subjectDiv.id = "subject-" + subjectCount;
 
         const subjectLabel = document.createElement("label");
@@ -110,6 +147,7 @@
         creditInput.type = "number";
         creditInput.id = "credit-" + subjectCount;
         creditInput.placeholder = "Enter Credit Hours";
+        creditInput.min = "1";
 
         subjectDiv.appendChild(subjectLabel);
         subjectDiv.appendChild(gradeInput);
@@ -169,4 +207,3 @@
 
 </body>
 </html>
-
